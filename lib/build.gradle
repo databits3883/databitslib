@@ -15,7 +15,7 @@ plugins {
 publishing {
     publications{
         maven(MavenPublication){
-            artifact('lib.jar'){
+            artifact('build/libs/lib.jar'){
                 extension 'jar'
             }
             artifactId = System.getenv('ARTIFACT')
