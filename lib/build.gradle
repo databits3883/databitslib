@@ -14,13 +14,12 @@ plugins {
 
 publishing {
     publications{
-        maven(MavenPublication){
-            artifact('build/libs/lib.jar'){
-                extension 'jar'
-            }
+        maven(MavenPublication){   
             artifactId = System.getenv('ARTIFACT')
             groupId = System.getenv('GROUP')
             version = System.getenv('VERSION')
+
+            from components.java
         }
     }
 }
