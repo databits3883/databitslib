@@ -15,7 +15,12 @@ plugins {
 publishing {
     publications{
         maven(MavenPublication){
-            groupId = 'com.github.databits3883'
+            artifact('build/libs/lib.jar'){
+                extension 'jar'
+            }
+            artifactId = System.getenv('ARTIFACT')
+            groupId = System.getenv('GROUP')
+            version = System.getenv('VERSION')
         }
     }
 }
