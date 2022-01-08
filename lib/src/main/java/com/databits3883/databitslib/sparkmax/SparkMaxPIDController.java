@@ -1,6 +1,8 @@
 package com.databits3883.databitslib.sparkmax;
 //TODO: add integration testing instructions or automation
 import com.databits3883.databitslib.util.PIDParameters;
+import com.revrobotics.AlternateEncoderType;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -18,31 +20,36 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
  */
 public class SparkMaxPIDController implements Sendable{
     CANSparkMax m_motor;
+    CANEncoder m_encoder;
     CANPIDController m_controller;
     PIDParameters m_parameters;
     ControlType m_type;
 
     double m_setpoint;
 
-    /**
-     * Creates a new SparkMaxPIDController
-     * @param motor the configured motor to control
-     * @param type the control type for the PID control loop. Currently this best supports kPosition and kVelocity
-     * @param parameters the PIDF gains for the control loop
-     */
-    public SparkMaxPIDController(CANSparkMax motor, ControlType type, PIDParameters parameters){
+
+
+    private SparkMaxPIDController(CANSparkMax motor, CANEncoder encoder, ControlType type){
         m_motor = motor;
-        m_parameters = parameters;
-        m_controller = m_motor.getPIDController();
-        m_controller.setP(m_parameters.p);
-        m_controller.setI(m_parameters.i);
-        m_controller.setD(m_parameters.d);
-        m_controller.setFF(m_parameters.ff);
-        
+        m_encoder = encoder;
         m_type = type;
 
-        SendableRegistry.addLW(this,"SPark Max PID", m_motor.getDeviceId());
+        m_controller = m_motor.getPIDController();
+        m_controller.setFeedbackDevice(m_encoder);
+
+        SendableRegistry.addLW(this, "Spark Max PID", m_motor.getDeviceId());
     }
+
+    public static SparkMaxPIDController withDefaultEncoder(CANSparkMax motor, ControlType type){
+        CANEncoder encoder = motor.getEncoder();
+        return new SparkMaxPIDController(motor, encoder, type);
+    }
+
+    public static SparkMaxPIDController withAlternateEncoder(CANSparkMax motor, ControlType type, int countsPerRev){
+        CANEncoder encoder = motor.getAlternateEncoder(AlternateEncoderType.kQuadrature, countsPerRev);
+        return new SparkMaxPIDController(motor, encoder, type);
+    }
+
 
     public CANError setP(double newP){
         CANError e = m_controller.setP(newP);
