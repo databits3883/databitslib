@@ -7,6 +7,7 @@ import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.EncoderType;
 
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
@@ -27,8 +28,6 @@ public class SparkMaxPIDController implements Sendable{
 
     double m_setpoint;
 
-
-
     private SparkMaxPIDController(CANSparkMax motor, CANEncoder encoder, ControlType type){
         m_motor = motor;
         m_encoder = encoder;
@@ -40,11 +39,36 @@ public class SparkMaxPIDController implements Sendable{
         SendableRegistry.addLW(this, "Spark Max PID", m_motor.getDeviceId());
     }
 
+    /**
+     * Creates a spark max pid controller using the encoder configured in firmware
+     * @param motor The motor to control
+     * @param type The control type to use
+     * @return a PID controller object
+     */
     public static SparkMaxPIDController withDefaultEncoder(CANSparkMax motor, ControlType type){
         CANEncoder encoder = motor.getEncoder();
         return new SparkMaxPIDController(motor, encoder, type);
     }
+    /**
+     * Creates a spark max pid controller using a connected encoder
+     * @param motor The motor to control
+     * @param type The control type to use
+     * @param encoderType The encoder to use
+     * @param countsPerRev The encoder counts per revolution
+     * @return A PID controller object
+     */
+    public static SparkMaxPIDController withEncoder(CANSparkMax motor, ControlType type, EncoderType encoderType, int countsPerRev){
+        CANEncoder encoder = motor.getEncoder(encoderType, countsPerRev);
+        return new SparkMaxPIDController(motor, encoder, type);
+    }
 
+    /**
+     * Creates a spark max pid controller using the alternate input controller
+     * @param motor The motor to control
+     * @param type The control type to use
+     * @param countsPerRev The counts per revolution on the external encoder
+     * @return a PID controller object
+     */
     public static SparkMaxPIDController withAlternateEncoder(CANSparkMax motor, ControlType type, int countsPerRev){
         CANEncoder encoder = motor.getAlternateEncoder(AlternateEncoderType.kQuadrature, countsPerRev);
         return new SparkMaxPIDController(motor, encoder, type);
@@ -124,6 +148,28 @@ public class SparkMaxPIDController implements Sendable{
     }
     public double getSetpoint(){
         return m_setpoint;
+    }
+    /**
+     * Gets the current value of the controlled signal.
+     * @return the value controlled by the PID loop
+     */
+    public double getSignal(){
+        switch (m_type){
+            case kCurrent:
+                return m_motor.getOutputCurrent();
+            case kDutyCycle:
+                return m_motor.get();
+            case kVoltage:
+                return m_motor.getBusVoltage();
+            case kPosition:
+            case kSmartMotion:
+                return m_encoder.getPosition();
+            case kVelocity:
+            case kSmartVelocity:
+                return m_encoder.getPosition();
+            default:
+                return 0;
+        }
     }
 
     /**
