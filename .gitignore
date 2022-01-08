@@ -6,3 +6,8 @@ build
 
 # Ignore build .class 'es
 *.class
+
+# eclipse meta
+.settings
+.project
+.classpath
