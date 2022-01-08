@@ -50,6 +50,29 @@ public class SparkMaxPIDController implements Sendable{
         return new SparkMaxPIDController(motor, encoder, type);
     }
 
+    /**
+     * Sets the conversion factor for position or velocity depending on preset control type
+     * @param conversionFactor the conversion factor from rotations
+     * @return any error thrown by setting the value, kNotImplemented for non velocity or position types, 
+     * kError if control type is not set
+     */
+    public CANError setConversionFactor(double conversionFactor){
+        switch (m_type){
+            case kCurrent:
+            case kDutyCycle:
+            case kVoltage:
+                return CANError.kNotImplmented;
+
+            case kPosition:
+            case kSmartMotion:
+                return m_encoder.setPositionConversionFactor(conversionFactor);
+            case kVelocity:
+            case kSmartVelocity:
+                return m_encoder.setVelocityConversionFactor(conversionFactor);
+            default:
+                return CANError.kError;
+        }
+    }
 
     public CANError setP(double newP){
         CANError e = m_controller.setP(newP);
