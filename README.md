@@ -14,5 +14,5 @@ repositories{
 Then add databitslib as a dependency:
 ```
 dependencies {
-    implementation 'com.github.databits3883:databitslib:0.0.1-alpha.6
+    implementation 'com.github.databits3883:databitslib:0.1.0-alpha.1
 }
