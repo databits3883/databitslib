@@ -24,6 +24,10 @@ public class SwerveModule implements Sendable{
         SendableRegistry.addLW(this, name);
     }
 
+    /**
+     * Sets the target state of the swerve module
+     * @param newState the state to target
+     */
     public void setState(SwerveModuleState newState){
         m_velocityController.setSetpoint(newState.speedMetersPerSecond);
         double newAngle = newState.angle.getRadians();
