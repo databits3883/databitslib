@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 
+/** Controlls a swerve module with a controller for wheel angle and velocity */
 public class SwerveModule implements Sendable{
 
     SparkMaxPIDController m_velocityController;
