@@ -18,6 +18,8 @@ public class SwerveModule implements Sendable{
     public SwerveModule(SparkMaxPIDController velocityController, SparkMaxPIDController rotationController, String name){
         m_velocityController = velocityController;
         m_rotationController = rotationController;
+        SendableRegistry.addChild(this, m_velocityController);
+        SendableRegistry.addChild(this, m_rotationController);
         SendableRegistry.addLW(this, name);
     }
 
@@ -45,8 +47,7 @@ public class SwerveModule implements Sendable{
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        // TODO Auto-generated method stub
-        
+        builder.setActuator(true);
     }
 
     /**
