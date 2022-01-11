@@ -174,7 +174,7 @@ public class SparkMaxPIDController implements Sendable{
                 return m_encoder.getPosition();
             case kVelocity:
             case kSmartVelocity:
-                return m_encoder.getPosition();
+                return m_encoder.getVelocity();
             default:
                 return 0;
         }
