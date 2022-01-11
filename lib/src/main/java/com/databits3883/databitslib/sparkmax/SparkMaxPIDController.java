@@ -188,15 +188,12 @@ public class SparkMaxPIDController implements Sendable{
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("PIDController");
-        builder.setSafeState(this::reset);
         builder.addDoubleProperty("p", this::getP, this::setP);
         builder.addDoubleProperty("i", this::getI, this::setI);
         builder.addDoubleProperty("d", this::getD, this::setD);
         builder.addDoubleProperty("f", this::getFF, this::setFF);
         builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
-
-        
+        builder.addDoubleProperty("current valaue", this::getSignal, (a)->{return;});
     }
 
 
