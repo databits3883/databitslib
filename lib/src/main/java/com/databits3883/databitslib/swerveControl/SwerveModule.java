@@ -3,6 +3,7 @@ package com.databits3883.databitslib.swerveControl;
 import com.databits3883.databitslib.sparkmax.SparkMaxPIDController;
 import com.revrobotics.REVLibError;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 /** Controlls a swerve module with a controller for wheel angle and velocity */
@@ -60,6 +61,10 @@ public class SwerveModule{
      */
     public REVLibError setVelocityConversionFactor(double factor){
         return m_velocityController.setConversionFactor(factor);
+    }
+
+    public REVLibError setWheelAngle(Rotation2d angle){
+        return m_rotationController.setEncoderPosition(angle.getRadians());
     }
     
 }

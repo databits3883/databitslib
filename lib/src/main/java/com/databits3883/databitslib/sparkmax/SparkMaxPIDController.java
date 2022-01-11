@@ -191,6 +191,15 @@ public class SparkMaxPIDController implements Sendable{
         return e;
     }
 
+    /**
+     * Sets the position of the encoder for calibration
+     * @param newPosition the position to set the current location as
+     * @return any error raised setting the position
+     */
+    public REVLibError setEncoderPosition(double newPosition){
+        return m_encoder.setPosition(newPosition);
+    }
+
 
     @Override
     public void initSendable(SendableBuilder builder) {
