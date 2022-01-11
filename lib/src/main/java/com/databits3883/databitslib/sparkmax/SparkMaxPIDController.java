@@ -30,13 +30,19 @@ public class SparkMaxPIDController implements Sendable{
 
     double m_setpoint;
 
-    private SparkMaxPIDController(CANSparkMax motor, RelativeEncoder encoder, ControlType type){
+    protected SparkMaxPIDController(CANSparkMax motor, RelativeEncoder encoder, ControlType type, PIDParameters parameters){
         m_motor = motor;
         m_encoder = encoder;
         m_type = type;
+        m_parameters = parameters;
 
         m_controller = m_motor.getPIDController();
         m_controller.setFeedbackDevice(m_encoder);
+
+        m_controller.setP(parameters.p);
+        m_controller.setI(parameters.i);
+        m_controller.setD(parameters.d);
+        m_controller.setFF(parameters.ff);
 
         SendableRegistry.addLW(this, "Spark Max PID", m_motor.getDeviceId());
     }
@@ -49,7 +55,7 @@ public class SparkMaxPIDController implements Sendable{
      */
     public static SparkMaxPIDController withDefaultEncoder(CANSparkMax motor, ControlType type){
         RelativeEncoder encoder = motor.getEncoder();
-        return new SparkMaxPIDController(motor, encoder, type);
+        return new SparkMaxPIDController(motor, encoder, type, new PIDParameters());
     }
     /**
      * Creates a spark max pid controller using a connected encoder
@@ -61,7 +67,7 @@ public class SparkMaxPIDController implements Sendable{
      */
     public static SparkMaxPIDController withEncoder(CANSparkMax motor, ControlType type, Type encoderType, int countsPerRev){
         RelativeEncoder encoder = motor.getEncoder(encoderType, countsPerRev);
-        return new SparkMaxPIDController(motor, encoder, type);
+        return new SparkMaxPIDController(motor, encoder, type, new PIDParameters());
     }
 
     /**
@@ -73,7 +79,7 @@ public class SparkMaxPIDController implements Sendable{
      */
     public static SparkMaxPIDController withAlternateEncoder(CANSparkMax motor, ControlType type, int countsPerRev){
         RelativeEncoder encoder = motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, countsPerRev);
-        return new SparkMaxPIDController(motor, encoder, type);
+        return new SparkMaxPIDController(motor, encoder, type, new PIDParameters());
     }
 
     /**
