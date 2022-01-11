@@ -1,17 +1,19 @@
 package com.databits3883.databitslib.sparkmax;
 //TODO: add integration testing instructions or automation
 import com.databits3883.databitslib.util.PIDParameters;
-import com.revrobotics.AlternateEncoderType;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANError;
-import com.revrobotics.CANPIDController;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
-import com.revrobotics.EncoderType;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
-import edu.wpi.first.wpilibj.Sendable;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
+
+import com.revrobotics.REVLibError;
+import com.revrobotics.SparkMaxAlternateEncoder;
+
+
 
 /**
  * Wrapper for basic operation with CANSparkMax motor controllers.
@@ -21,14 +23,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
  */
 public class SparkMaxPIDController implements Sendable{
     CANSparkMax m_motor;
-    CANEncoder m_encoder;
-    CANPIDController m_controller;
+    RelativeEncoder m_encoder;
+    com.revrobotics.SparkMaxPIDController m_controller;
     PIDParameters m_parameters;
     ControlType m_type;
 
     double m_setpoint;
 
-    private SparkMaxPIDController(CANSparkMax motor, CANEncoder encoder, ControlType type){
+    private SparkMaxPIDController(CANSparkMax motor, RelativeEncoder encoder, ControlType type){
         m_motor = motor;
         m_encoder = encoder;
         m_type = type;
@@ -46,7 +48,7 @@ public class SparkMaxPIDController implements Sendable{
      * @return a PID controller object
      */
     public static SparkMaxPIDController withDefaultEncoder(CANSparkMax motor, ControlType type){
-        CANEncoder encoder = motor.getEncoder();
+        RelativeEncoder encoder = motor.getEncoder();
         return new SparkMaxPIDController(motor, encoder, type);
     }
     /**
@@ -57,8 +59,8 @@ public class SparkMaxPIDController implements Sendable{
      * @param countsPerRev The encoder counts per revolution
      * @return A PID controller object
      */
-    public static SparkMaxPIDController withEncoder(CANSparkMax motor, ControlType type, EncoderType encoderType, int countsPerRev){
-        CANEncoder encoder = motor.getEncoder(encoderType, countsPerRev);
+    public static SparkMaxPIDController withEncoder(CANSparkMax motor, ControlType type, Type encoderType, int countsPerRev){
+        RelativeEncoder encoder = motor.getEncoder(encoderType, countsPerRev);
         return new SparkMaxPIDController(motor, encoder, type);
     }
 
@@ -70,7 +72,7 @@ public class SparkMaxPIDController implements Sendable{
      * @return a PID controller object
      */
     public static SparkMaxPIDController withAlternateEncoder(CANSparkMax motor, ControlType type, int countsPerRev){
-        CANEncoder encoder = motor.getAlternateEncoder(AlternateEncoderType.kQuadrature, countsPerRev);
+        RelativeEncoder encoder = motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, countsPerRev);
         return new SparkMaxPIDController(motor, encoder, type);
     }
 
@@ -80,12 +82,12 @@ public class SparkMaxPIDController implements Sendable{
      * @return any error thrown by setting the value, kNotImplemented for non velocity or position types, 
      * kError if control type is not set
      */
-    public CANError setConversionFactor(double conversionFactor){
+    public REVLibError setConversionFactor(double conversionFactor){
         switch (m_type){
             case kCurrent:
             case kDutyCycle:
             case kVoltage:
-                return CANError.kNotImplmented;
+                return REVLibError.kInvalid;
 
             case kPosition:
             case kSmartMotion:
@@ -94,41 +96,41 @@ public class SparkMaxPIDController implements Sendable{
             case kSmartVelocity:
                 return m_encoder.setVelocityConversionFactor(conversionFactor);
             default:
-                return CANError.kError;
+                return REVLibError.kError;
         }
     }
 
-    public CANError setP(double newP){
-        CANError e = m_controller.setP(newP);
-        if(e == CANError.kOk){
+    public REVLibError setP(double newP){
+        REVLibError e = m_controller.setP(newP);
+        if(e == REVLibError.kOk){
             m_parameters.p = newP;            
         }
         return e;
     }
-    public CANError setI(double newI){
-        CANError e = m_controller.setI(newI);
-        if(e == CANError.kOk){
+    public REVLibError setI(double newI){
+        REVLibError e = m_controller.setI(newI);
+        if(e == REVLibError.kOk){
             m_parameters.i = newI;            
         }
         return e;
     }
-    public CANError setD(double newD){
-        CANError e = m_controller.setD(newD);
-        if(e == CANError.kOk){
+    public REVLibError setD(double newD){
+        REVLibError e = m_controller.setD(newD);
+        if(e == REVLibError.kOk){
             m_parameters.d = newD;            
         }
         return e;
     }
-    public CANError setFF(double newFF){
-        CANError e = m_controller.setFF(newFF);
-        if(e == CANError.kOk){
+    public REVLibError setFF(double newFF){
+        REVLibError e = m_controller.setFF(newFF);
+        if(e == REVLibError.kOk){
             m_parameters.ff = newFF;            
         }
         return e;
     }
-    public CANError setSetpoint(double newSetpoint){
-        CANError e = m_controller.setReference(newSetpoint, m_type);
-        if(e==CANError.kOk){
+    public REVLibError setSetpoint(double newSetpoint){
+        REVLibError e = m_controller.setReference(newSetpoint, m_type);
+        if(e==REVLibError.kOk){
             m_setpoint = newSetpoint;
         }
         return e;
@@ -176,9 +178,9 @@ public class SparkMaxPIDController implements Sendable{
      * Resets the PID controller, clearing the I accumulator
      * @return any error produced in resetting the controller, or kOK if successful
      */
-    public CANError reset(){
+    public REVLibError reset(){
         m_motor.disable();
-        CANError e = m_controller.setIAccum(0);
+        REVLibError e = m_controller.setIAccum(0);
         m_controller.setReference(m_setpoint, m_type);
         return e;
     }
