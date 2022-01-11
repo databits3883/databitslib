@@ -1,12 +1,12 @@
 package com.databits3883.databitslib.swerveControl;
 
 import com.databits3883.databitslib.sparkmax.SparkMaxPIDController;
-import com.revrobotics.CANError;
+import com.revrobotics.REVLibError;
 
-import edu.wpi.first.wpilibj.Sendable;
-import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 /** Controlls a swerve module with a controller for wheel angle and velocity */
 public class SwerveModule implements Sendable{
@@ -60,7 +60,7 @@ public class SwerveModule implements Sendable{
      * @param factor the factor converting encoder rotations to wheel rotations
      * @return any Error raised in setting the factor
      */
-    public CANError setAngleConversionFactor(double factor){
+    public REVLibError setAngleConversionFactor(double factor){
         return m_rotationController.setConversionFactor(factor* 2*Math.PI);
     }
 
@@ -69,7 +69,7 @@ public class SwerveModule implements Sendable{
      * @param factor the factor converting encoder rotations to wheel rotations
      * @return any Error raised in setting the factor
      */
-    public CANError setVelocityConversionFactor(double factor){
+    public REVLibError setVelocityConversionFactor(double factor){
         return m_velocityController.setConversionFactor(factor);
     }
     
