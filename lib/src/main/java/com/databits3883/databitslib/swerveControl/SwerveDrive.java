@@ -7,13 +7,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
 
 
 
 
-public class SwerveDrive implements Sendable {
+
+public class SwerveDrive{
 
     SwerveModule[] m_modules;
     SwerveDriveKinematics m_kinematics;
@@ -39,12 +38,6 @@ public class SwerveDrive implements Sendable {
     public void setChassisSpeed(ChassisSpeeds target){
         SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(target);
         setModuleStates(states);
-    }
-
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        // TODO Auto-generated method stub
-        
     }
     
 }

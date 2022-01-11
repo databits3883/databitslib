@@ -3,25 +3,19 @@ package com.databits3883.databitslib.swerveControl;
 import com.databits3883.databitslib.sparkmax.SparkMaxPIDController;
 import com.revrobotics.REVLibError;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 /** Controlls a swerve module with a controller for wheel angle and velocity */
-public class SwerveModule implements Sendable{
+public class SwerveModule{
 
     SparkMaxPIDController m_velocityController;
     SparkMaxPIDController m_rotationController;
 
     SwerveModuleState currentState;
 
-    public SwerveModule(SparkMaxPIDController velocityController, SparkMaxPIDController rotationController, String name){
+    public SwerveModule(SparkMaxPIDController velocityController, SparkMaxPIDController rotationController){
         m_velocityController = velocityController;
         m_rotationController = rotationController;
-        SendableRegistry.addChild(this, m_velocityController);
-        SendableRegistry.addChild(this, m_rotationController);
-        SendableRegistry.addLW(this, name);
     }
 
     /**
@@ -48,11 +42,6 @@ public class SwerveModule implements Sendable{
         }else{
             return offsetAngle + Math.PI*2;
         }
-    }
-
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        builder.setActuator(true);
     }
 
     /**
