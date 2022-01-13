@@ -39,5 +39,9 @@ public class SwerveDrive{
         SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(target);
         setModuleStates(states);
     }
+
+    public SwerveDriveKinematics getKinematics(){
+        return m_kinematics;
+    }
     
 }
