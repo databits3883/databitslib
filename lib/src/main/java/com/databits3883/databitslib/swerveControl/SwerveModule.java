@@ -33,6 +33,15 @@ public class SwerveModule{
 
     }
 
+    /**
+     * Optimize a module state to minimize rotational disance from this module's current position
+     * @param state the desired state
+     * @return A new state equivalent to the input, possibly with the speed inverted and the angle rotated half a rotation
+     */
+    public SwerveModuleState optimize(SwerveModuleState state){
+        return SwerveModuleState.optimize(state, new Rotation2d(m_rotationController.getSetpoint()));
+    }
+
     public static double mapAngleToNearContinuous(double currentAngle, double newAngle){
         long completedRotations = Math.round(currentAngle / (Math.PI*2));
         double offsetAngle = newAngle%(Math.PI*2) + (2*Math.PI*completedRotations);

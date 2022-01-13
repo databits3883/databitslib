@@ -31,7 +31,7 @@ public class SwerveDrive{
 
     protected void setModuleStates(SwerveModuleState[] states){
         for(int i=0;i<m_numModules;i++){
-            m_modules[i].setState(states[i]);
+            m_modules[i].setState(m_modules[i].optimize(states[i]));
         }
     }
 
