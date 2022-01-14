@@ -18,9 +18,12 @@ public class SwerveDrive{
     SwerveDriveKinematics m_kinematics;
     int m_numModules;
 
+    SwerveModuleState[] m_lastMeasuredStates;
+
     public SwerveDrive(List<Pair<SwerveModule,Translation2d>> modules){
         m_numModules = modules.size();
         m_modules = new SwerveModule[m_numModules];
+        m_lastMeasuredStates = new SwerveModuleState[m_numModules];
         Translation2d[] locations = new Translation2d[m_numModules];
         for(int i=0;i<m_numModules;i++){
             m_modules[i] = modules.get(i).getFirst();
@@ -42,6 +45,13 @@ public class SwerveDrive{
 
     public SwerveDriveKinematics getKinematics(){
         return m_kinematics;
+    }
+
+    public SwerveModuleState[] measureCurrentState(){
+        for(int i=0;i<m_numModules;i++){
+            m_lastMeasuredStates[i] = m_modules[i].measureCurrentState();
+        }
+        return m_lastMeasuredStates;
     }
     
 }

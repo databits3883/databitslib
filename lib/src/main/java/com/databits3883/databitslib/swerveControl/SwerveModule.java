@@ -12,7 +12,7 @@ public class SwerveModule{
     SparkMaxPIDController m_velocityController;
     SparkMaxPIDController m_rotationController;
 
-    SwerveModuleState currentState;
+    SwerveModuleState currentTarget;
 
     public SwerveModule(SparkMaxPIDController velocityController, SparkMaxPIDController rotationController){
         m_velocityController = velocityController;
@@ -29,7 +29,7 @@ public class SwerveModule{
         double currentAngle = m_rotationController.getSignal();
         m_rotationController.setSetpoint(mapAngleToNearContinuous(currentAngle, newAngle));
 
-        currentState = newState;
+        currentTarget = newState;
 
     }
 
@@ -74,6 +74,10 @@ public class SwerveModule{
 
     public REVLibError setWheelAngle(Rotation2d angle){
         return m_rotationController.setEncoderPosition(angle.getRadians());
+    }
+
+    public SwerveModuleState measureCurrentState(){
+        return new SwerveModuleState(m_velocityController.getSignal(), new Rotation2d(m_rotationController.getSignal()));
     }
     
 }
