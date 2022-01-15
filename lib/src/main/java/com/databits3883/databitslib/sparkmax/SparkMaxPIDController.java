@@ -21,7 +21,7 @@ import com.revrobotics.SparkMaxAlternateEncoder;
  * Implements the Sendable interface for configuration and testing over networkTables with ShuffleBoard.
  * 
  */
-public class SparkMaxPIDController implements Sendable{
+public class SparkMaxPIDController{
     CANSparkMax m_motor;
     RelativeEncoder m_encoder;
     com.revrobotics.SparkMaxPIDController m_controller;
@@ -30,7 +30,7 @@ public class SparkMaxPIDController implements Sendable{
 
     double m_setpoint;
 
-    protected SparkMaxPIDController(CANSparkMax motor, RelativeEncoder encoder, ControlType type, PIDParameters parameters){
+    public SparkMaxPIDController(CANSparkMax motor, RelativeEncoder encoder, ControlType type, PIDParameters parameters){
         m_motor = motor;
         m_encoder = encoder;
         m_type = type;
@@ -43,8 +43,6 @@ public class SparkMaxPIDController implements Sendable{
         m_controller.setI(parameters.i);
         m_controller.setD(parameters.d);
         m_controller.setFF(parameters.ff);
-
-        SendableRegistry.addLW(this, "Spark Max PID", m_motor.getDeviceId());
     }
 
     /**
@@ -198,17 +196,6 @@ public class SparkMaxPIDController implements Sendable{
      */
     public REVLibError setEncoderPosition(double newPosition){
         return m_encoder.setPosition(newPosition);
-    }
-
-
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("p", this::getP, this::setP);
-        builder.addDoubleProperty("i", this::getI, this::setI);
-        builder.addDoubleProperty("d", this::getD, this::setD);
-        builder.addDoubleProperty("f", this::getFF, this::setFF);
-        builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
-        builder.addDoubleProperty("current valaue", this::getSignal, (a)->{return;});
     }
 
 
