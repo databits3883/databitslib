@@ -32,7 +32,11 @@ public class SwerveDrive{
         m_kinematics = new SwerveDriveKinematics(locations);
     }
 
-    protected void setModuleStates(SwerveModuleState[] states){
+    /**
+     * Set swerve module states directly. Preer using setChassisSpeed instead
+     * @param states the swerve module states in the order passed to the constructor
+     */
+    public void setModuleStates(SwerveModuleState[] states){
         for(int i=0;i<m_numModules;i++){
             m_modules[i].setState(m_modules[i].optimize(states[i]));
         }
