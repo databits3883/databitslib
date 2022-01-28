@@ -42,9 +42,18 @@ public class SwerveDrive{
         }
     }
 
+    public void setModuleStatesDesaturated(SwerveModuleState[] states, double maxSpeed){
+        SwerveDriveKinematics.desaturateWheelSpeeds(states,maxSpeed);
+        setModuleStates(states);
+    }
+
     public void setChassisSpeed(ChassisSpeeds target){
         SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(target);
         setModuleStates(states);
+    }
+    public void setChassisSpeedDesaturate(ChassisSpeeds target, double maxSpeed){
+        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(target);
+        setModuleStatesDesaturated(states, maxSpeed);
     }
 
     public SwerveDriveKinematics getKinematics(){
